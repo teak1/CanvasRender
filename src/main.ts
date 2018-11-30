@@ -53,7 +53,7 @@ function __render_loop() {
     state_manager.setState(STATES.rendering_allowed, false);
     if (render_canvas) render_canvas.render();
     window.requestAnimationFrame(_ => __render_loop());
-    let end_time = performance.now()
+    let end_time = performance.now();
     last_frame_duration = end_time - start_time;
     avg_frame_time += last_frame_duration;
     avg_frame_time /= 2;
