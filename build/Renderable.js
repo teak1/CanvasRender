@@ -1,6 +1,6 @@
 System.register(["./Color", "./Canvas"], function (exports_1, context_1) {
     "use strict";
-    var Color_1, Canvas_1, lastFillColor, lastStrokeColor, Renderable;
+    var Color_1, Canvas_1, Renderable;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -12,8 +12,6 @@ System.register(["./Color", "./Canvas"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            lastFillColor = null;
-            lastStrokeColor = null;
             Renderable = class Renderable {
                 constructor(fill = Color_1.default(0, 0, 0, 1), stroke = Color_1.default(0, 0, 0, 1)) {
                     this.colorFill = fill;
@@ -24,12 +22,8 @@ System.register(["./Color", "./Canvas"], function (exports_1, context_1) {
                     ctx.strokeStyle = this.colorStroke.toString();
                 }
                 draw(ctx) {
-                    if (lastFillColor != ctx.fillStyle || lastStrokeColor != ctx.strokeStyle) {
-                        ctx.fill();
-                        ctx.stroke();
-                        lastFillColor = ctx.fillStyle;
-                        lastStrokeColor = ctx.strokeStyle;
-                    }
+                    ctx.fill();
+                    ctx.stroke();
                 }
                 canvas() {
                     return Canvas_1.default.getGlobalCanvas();

@@ -4,7 +4,8 @@ import Canvas from './Canvas';
 import StateManager from './stateManager';
 import { STATES, HOOKS } from './states';
 import Rect from './Renderables/Rect';
-// import Polygon from './Renderables/Polygon';
+import Polygon from './Renderables/Polygon';
+import render_queue from './renderQueue';
 let last_frame_duration = 0;
 let state_manager = new StateManager();
 let render_canvas = null;
@@ -23,11 +24,11 @@ function __render_loop() {
         let __current_context = Canvas.getGlobalCanvas();
         let getState: Function = state_manager.getReadonly();
         let rect: Function = Rect.render;
-        // let poly: Function = Polygon.render;
+        let polygon: Function = Polygon.render;
         let context: Object = {
             getState,
             rect,
-            // poly,
+            polygon,
             // circle,
             Color,
             width: __current_context.canvas.width,
@@ -35,6 +36,7 @@ function __render_loop() {
         };
         func(context);
     }
+    render_queue.empty();
     let start_time = performance.now()
     state_manager.setState(STATES.physics_allowed, true);
     hooks.pre_update.forEach(hook => hook_exec_func(hook));
@@ -82,6 +84,9 @@ window["CR"] = {
         hooks,
         getRenderDuration() {
             return last_frame_duration;
+        },
+        render_queue() {
+            return render_queue;
         }
     }
 };

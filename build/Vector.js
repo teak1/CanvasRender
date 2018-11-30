@@ -16,8 +16,24 @@ System.register([], function (exports_1, context_1) {
                         if (a.length > i) {
                             this.values[i] = a[i];
                         }
-                        if (!getterDict[this.refs[i]])
+                        if (!getterDict[this.refs[i]]) {
                             getterDict[this.refs[i]] = new Function(`return{get(){return this.get(this,"${this.refs[i]}");},set(value){return this.set(this,"${this.refs[i]}",value);}}`);
+                        }
+                        if (!getterDict[this.refs[i]]) {
+                            let fn = (val => {
+                                return _ => {
+                                    return {
+                                        get() {
+                                            return this.get(this, val);
+                                        },
+                                        set(value) {
+                                            return this.set(this, val, value);
+                                        }
+                                    };
+                                };
+                            });
+                            getterDict[this.refs[i]] = fn(this.refs[i]);
+                        }
                         Object.defineProperty(this, this.refs[i], getterDict[this.refs[i]]());
                     }
                 }

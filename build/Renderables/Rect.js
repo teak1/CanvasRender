@@ -22,16 +22,17 @@ System.register(["../Renderable", "../renderQueue", "../Box"], function (exports
                     this.box = new Box_1.default(x, y, w, h, theta);
                 }
                 render(ctx) {
+                    this.box.pre_render();
                     this.setColor(ctx);
                     if (this.box.theta == 0) {
-                        ctx.fillRect(this.box.left(), this.box.top(), this.box.size.x, this.box.size.y);
+                        ctx.fillRect(this.box.left, this.box.top, this.box.size.x, this.box.size.y);
                     }
                     else {
                         ctx.beginPath();
-                        ctx.moveTo(this.box.vertex1().x, this.box.vertex1().y);
-                        ctx.lineTo(this.box.vertex2().x, this.box.vertex2().y);
-                        ctx.lineTo(this.box.vertex3().x, this.box.vertex3().y);
-                        ctx.lineTo(this.box.vertex4().x, this.box.vertex4().y);
+                        ctx.moveTo(this.box.vertices[0].x, this.box.vertices[0].y);
+                        for (let i = 1; i < this.box.vertices.length; i++) {
+                            ctx.lineTo(this.box.vertices[i].x, this.box.vertices[i].y);
+                        }
                         ctx.closePath();
                     }
                     this.draw(ctx);

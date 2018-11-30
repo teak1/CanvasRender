@@ -1,6 +1,6 @@
 System.register(["../Vector", "../Renderable", "../renderQueue"], function (exports_1, context_1) {
     "use strict";
-    var Vector, Renderable_1, renderQueue_1, Polygon;
+    var Vector, Renderable_1, renderQueue_1, Circle;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -16,23 +16,20 @@ System.register(["../Vector", "../Renderable", "../renderQueue"], function (expo
         ],
         execute: function () {
             //Everything is centered
-            Polygon = class Polygon extends Renderable_1.default {
-                constructor(fill, stroke, args) {
+            Circle = class Circle extends Renderable_1.default {
+                constructor(x, y, r, fill, stroke) {
                     super(fill, stroke);
-                    this.points = new Array();
                     for (let i = 0; i < args.length; i += 2)
                         this.points.push(new Vector.Vector2(args[i], args[i + 1]));
                 }
                 render(ctx) {
                     this.setColor(ctx);
                     ctx.beginPath();
-                    ctx.moveTo(this.points[0].x, this.points[0].y);
-                    this.points.forEach((v, i) => i && ctx.lineTo(v.x, v.y));
                     ctx.closePath();
                     this.draw(ctx);
                 }
             };
-            exports_1("Polygon", Polygon);
+            exports_1("Circle", Circle);
             exports_1("default", {
                 Polygon,
                 render(fill, stroke, ...args) {
@@ -42,4 +39,4 @@ System.register(["../Vector", "../Renderable", "../renderQueue"], function (expo
         }
     };
 });
-//# sourceMappingURL=Polygon.js.map
+//# sourceMappingURL=Circle.js.map
