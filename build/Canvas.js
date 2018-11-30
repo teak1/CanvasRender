@@ -31,6 +31,8 @@ System.register(["./renderQueue"], function (exports_1, context_1) {
                         l.render(this.context);
                     }
                     ;
+                    this.context.fill();
+                    this.context.stroke();
                 }
             };
             global_canvas_object = null;

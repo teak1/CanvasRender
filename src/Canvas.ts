@@ -15,6 +15,8 @@ class Canvas {
         while (l = render_queue.get()) {
             l.render(this.context);
         };
+        this.context.fill();
+        this.context.stroke();
     }
 }
 let global_canvas_object = null;

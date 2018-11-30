@@ -4,10 +4,14 @@ import Canvas from './Canvas';
 import StateManager from './stateManager';
 import { STATES, HOOKS } from './states';
 import Rect from './Renderables/Rect';
-// import Polygon from './Renderables/Polygon';
+import Polygon from './Renderables/Polygon';
+import render_queue from './renderQueue';
 let last_frame_duration = 0;
 let state_manager = new StateManager();
 let render_canvas = null;
+let avg_frame_time = 0;
+let fremlen = 30;
+let frems = new Array(fremlen).fill(60);
 const hooks = {
     pre_update: new Array<Function>(),
     update: new Array<Function>(),
@@ -19,15 +23,16 @@ const hooks = {
 }
 
 function __render_loop() {
+    let start_time = performance.now()
     let hook_exec_func = function (func: Function) {
         let __current_context = Canvas.getGlobalCanvas();
         let getState: Function = state_manager.getReadonly();
         let rect: Function = Rect.render;
-        // let poly: Function = Polygon.render;
+        let polygon: Function = Polygon.render;
         let context: Object = {
             getState,
             rect,
-            // poly,
+            polygon,
             // circle,
             Color,
             width: __current_context.canvas.width,
@@ -35,7 +40,7 @@ function __render_loop() {
         };
         func(context);
     }
-    let start_time = performance.now()
+    render_queue.empty();
     state_manager.setState(STATES.physics_allowed, true);
     hooks.pre_update.forEach(hook => hook_exec_func(hook));
     hooks.update.forEach(hook => hook_exec_func(hook));
@@ -47,9 +52,14 @@ function __render_loop() {
     hooks.post_render.forEach(hook => hook_exec_func(hook));
     state_manager.setState(STATES.rendering_allowed, false);
     if (render_canvas) render_canvas.render();
+    window.requestAnimationFrame(_ => __render_loop());
     let end_time = performance.now()
     last_frame_duration = end_time - start_time;
-    window.requestAnimationFrame(_ => __render_loop());
+    avg_frame_time += last_frame_duration;
+    avg_frame_time /= 2;
+    frems.push(1000 / avg_frame_time);
+    frems.shift();
+    // console.log(frems.reduce((a, v) => a + v, 0) / fremlen);
 }
 __render_loop();
 
@@ -82,6 +92,12 @@ window["CR"] = {
         hooks,
         getRenderDuration() {
             return last_frame_duration;
+        },
+        render_queue() {
+            return render_queue;
+        },
+        avg() {
+            return avg_frame_time;
         }
     }
 };
