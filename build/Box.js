@@ -22,15 +22,24 @@ System.register(["./Vector"], function (exports_1, context_1) {
                     return this.theta * 180 / Math.PI;
                 }
                 pre_render() {
-                    if (this.theta)
+                    if (this.theta) {
+                        let c = Math.cos(this.theta);
+                        let s = Math.sin(this.theta);
+                        let xc = this.halfsize.x * c;
+                        let xs = this.halfsize.x * s;
+                        let yc = this.halfsize.y * c;
+                        let ys = this.halfsize.y * s;
                         this.vertices = [
-                            this.pos.add(this.halfsize.invert().rotate(this.theta)),
-                            this.pos.add(this.halfsize.mult(new Vector_1.default.Vector2(-1, 1)).rotate(this.theta)),
-                            this.pos.add(this.halfsize.rotate(this.theta)),
-                            this.pos.add(this.halfsize.mult(new Vector_1.default.Vector2(1, -1)).rotate(this.theta))
+                            new Vector_1.default.Vector2(this.pos.x + xc - ys, this.pos.y + yc + xs),
+                            new Vector_1.default.Vector2(this.pos.x - xc - ys, this.pos.y + yc - xs),
+                            new Vector_1.default.Vector2(this.pos.x - xc + ys, this.pos.y - yc - xs),
+                            new Vector_1.default.Vector2(this.pos.x + xc + ys, this.pos.y - yc + xs)
                         ];
-                    this.top = this.pos.y - this.halfsize.y;
-                    this.left = this.pos.x - this.halfsize.x;
+                    }
+                    else {
+                        this.top = this.pos.y - this.halfsize.y;
+                        this.left = this.pos.x - this.halfsize.x;
+                    }
                 }
             };
             exports_1("Box", Box);

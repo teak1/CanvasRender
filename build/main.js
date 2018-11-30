@@ -1,8 +1,9 @@
 System.register(["./Color", "./Vector", "./Canvas", "./stateManager", "./states", "./Renderables/Rect", "./Renderables/Polygon", "./renderQueue"], function (exports_1, context_1) {
     "use strict";
-    var Color_1, Vector_1, Canvas_1, stateManager_1, states_1, Rect_1, Polygon_1, renderQueue_1, last_frame_duration, state_manager, render_canvas, hooks, _hooks;
+    var Color_1, Vector_1, Canvas_1, stateManager_1, states_1, Rect_1, Polygon_1, renderQueue_1, last_frame_duration, state_manager, render_canvas, avg_frame_time, fremlen, frems, hooks, _hooks;
     var __moduleName = context_1 && context_1.id;
     function __render_loop() {
+        let start_time = performance.now();
         let hook_exec_func = function (func) {
             let __current_context = Canvas_1.default.getGlobalCanvas();
             let getState = state_manager.getReadonly();
@@ -20,7 +21,6 @@ System.register(["./Color", "./Vector", "./Canvas", "./stateManager", "./states"
             func(context);
         };
         renderQueue_1.default.empty();
-        let start_time = performance.now();
         state_manager.setState(states_1.STATES.physics_allowed, true);
         hooks.pre_update.forEach(hook => hook_exec_func(hook));
         hooks.update.forEach(hook => hook_exec_func(hook));
@@ -33,9 +33,14 @@ System.register(["./Color", "./Vector", "./Canvas", "./stateManager", "./states"
         state_manager.setState(states_1.STATES.rendering_allowed, false);
         if (render_canvas)
             render_canvas.render();
+        window.requestAnimationFrame(_ => __render_loop());
         let end_time = performance.now();
         last_frame_duration = end_time - start_time;
-        window.requestAnimationFrame(_ => __render_loop());
+        avg_frame_time += last_frame_duration;
+        avg_frame_time /= 2;
+        frems.push(1000 / avg_frame_time);
+        frems.shift();
+        console.log(frems.reduce((a, v) => a + v, 0) / fremlen);
     }
     function __on(thing, func) {
         if (hooks[thing]) {
@@ -83,6 +88,9 @@ System.register(["./Color", "./Vector", "./Canvas", "./stateManager", "./states"
             last_frame_duration = 0;
             state_manager = new stateManager_1.default();
             render_canvas = null;
+            avg_frame_time = 0;
+            fremlen = 30;
+            frems = new Array(fremlen).fill(60);
             hooks = {
                 pre_update: new Array(),
                 update: new Array(),
@@ -110,6 +118,9 @@ System.register(["./Color", "./Vector", "./Canvas", "./stateManager", "./states"
                     },
                     render_queue() {
                         return renderQueue_1.default;
+                    },
+                    avg() {
+                        return avg_frame_time;
                     }
                 }
             };

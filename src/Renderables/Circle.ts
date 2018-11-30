@@ -4,23 +4,24 @@ import render_queue from '../renderQueue';
 
 //Everything is centered
 export class Circle extends Renderable {
-    public pos: Vector.Vec
+    public pos: Vector.Vector2;
+    public r: number;
     constructor(x, y, r, fill: any, stroke: any) {
         super(fill, stroke);
-        for (let i = 0; i < args.length; i += 2)
-            this.points.push(new Vector.Vector2(args[i], args[i + 1]));
+        this.pos = new Vector.Vector2(x, y);
+        this.r = r;
     }
     public render(ctx) {
         this.setColor(ctx);
         ctx.beginPath();
-
+        ctx.arc(this.pos.x, this.pos.y, this.r, 0, 2 * Math.PI);
         ctx.closePath();
         this.draw(ctx);
     }
 }
 export default {
-    Polygon,
-    render(fill: any, stroke: any, ...args) {
-        render_queue.add(new Polygon(fill, stroke, args));
+    Circle,
+    render(x, y, r, fill: any, stroke: any) {
+        render_queue.add(new Circle(x, y, r, fill, stroke));
     }
 }

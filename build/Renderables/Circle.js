@@ -19,21 +19,22 @@ System.register(["../Vector", "../Renderable", "../renderQueue"], function (expo
             Circle = class Circle extends Renderable_1.default {
                 constructor(x, y, r, fill, stroke) {
                     super(fill, stroke);
-                    for (let i = 0; i < args.length; i += 2)
-                        this.points.push(new Vector.Vector2(args[i], args[i + 1]));
+                    this.pos = new Vector.Vector2(x, y);
+                    this.r = r;
                 }
                 render(ctx) {
                     this.setColor(ctx);
                     ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, this.r, 0, 2 * Math.PI);
                     ctx.closePath();
                     this.draw(ctx);
                 }
             };
             exports_1("Circle", Circle);
             exports_1("default", {
-                Polygon,
-                render(fill, stroke, ...args) {
-                    renderQueue_1.default.add(new Polygon(fill, stroke, args));
+                Circle,
+                render(x, y, r, fill, stroke) {
+                    renderQueue_1.default.add(new Circle(x, y, r, fill, stroke));
                 }
             });
         }
