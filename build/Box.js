@@ -17,12 +17,13 @@ System.register(["./Vector"], function (exports_1, context_1) {
                     this.size = new Vector_1.default.Vector2(w, h);
                     this.halfsize = new Vector_1.default.Vector2(w / 2, h / 2);
                     this.theta = theta * Math.PI / 180;
+                    this.hasRotation = theta != undefined;
                 }
                 getTheta() {
                     return this.theta * 180 / Math.PI;
                 }
                 pre_render() {
-                    if (this.theta) {
+                    if (this.hasRotation) {
                         let c = Math.cos(this.theta);
                         let s = Math.sin(this.theta);
                         let xc = this.halfsize.x * c;

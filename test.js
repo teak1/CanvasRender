@@ -4,7 +4,10 @@ CR.on(CR.hooks.pre_render, function (context) {
 })
 CR.on(CR.hooks.render, function (context) {
     for (var j = 0; j < 20; j++) {
-        for (var i = 0; i < 20; i++) context.rect(i * 50 + 80, 80 + j * 50, 15, 15, context.Color("red"), context.Color("black"), 0);
+        for (var i = 0; i < 20; i++) {
+            context.rect(i * 45 + 25, 25 + j * 45, 15, 45, context.Color("red"), context.Color("black"), new Date().getTime() / 10 + i * j);
+            context.rect(i * 45 + 25, 30 + j * 45, 15, 45, context.Color("red"), context.Color("black"), new Date().getTime() / 10 + i * j);
+        }
         // debugger;
     }
     // context.rect(100 + 80, 80, 15, 15, context.Color("red"), context.Color(0, 0, 0, 255), new Date().getTime() / 100);

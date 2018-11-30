@@ -59,7 +59,7 @@ function __render_loop() {
     avg_frame_time /= 2;
     frems.push(1000 / avg_frame_time);
     frems.shift();
-    console.log(frems.reduce((a, v) => a + v, 0) / fremlen);
+    // console.log(frems.reduce((a, v) => a + v, 0) / fremlen);
 }
 __render_loop();
 

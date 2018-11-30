@@ -13,7 +13,7 @@ export class Rect extends Renderable {
     public render(ctx) {
         this.box.pre_render();
         this.setColor(ctx);
-        if (this.box.theta == 0) {
+        if (!this.box.hasRotation) {
             ctx.fillRect(this.box.left, this.box.top, this.box.size.x, this.box.size.y);
         } else {
             ctx.beginPath();

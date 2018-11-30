@@ -7,17 +7,19 @@ export class Box {
     public vertices: Array<any> = [];
     public top: number;
     public left: number;
+    public hasRotation: Boolean;
     constructor(x, y, w, h, theta: number = 0) {
         this.pos = new Vector.Vector2(x, y);
         this.size = new Vector.Vector2(w, h);
         this.halfsize = new Vector.Vector2(w / 2, h / 2);
         this.theta = theta * Math.PI / 180;
+        this.hasRotation = theta != undefined;
     }
     public getTheta(): number {
         return this.theta * 180 / Math.PI;
     }
     public pre_render() {
-        if (this.theta) {
+        if (this.hasRotation) {
             let c = Math.cos(this.theta);
             let s = Math.sin(this.theta);
             let xc = this.halfsize.x * c;
